@@ -38,9 +38,10 @@ GET `tokman.<namespace>.svc/api/<namespace>/<repository>`
 Response:
 
 {
-    "namespace": "<namespace>",
-    "repository": "<namespace>",
-    "access_token": "..."
+"namespace": "<namespace>",
+"repository": "<namespace>",
+"access_token": "..."
 }
 
 [link]: https://docs.github.com/en/developers/apps/authenticating-with-github-apps#authenticating-as-a-github-app
+[installation tokens]: https://docs.github.com/en/rest/reference/apps#create-an-installation-access-token-for-an-app
