@@ -3,16 +3,21 @@
 
 FROM fedora:32
 
+WORKDIR /tokman
+ADD https://raw.githubusercontent.com/packit/deployment/master/scripts/setupcfg2rpm.py /tokman/setupcfg2rpm.py
+COPY . /tokman/
+
 RUN dnf install -y \
-    python3-flask \
-    python3-flask-restx \
-    python3-alembic \
-    python3-flask-sqlalchemy \
-    python3-pygithub \
+    git \
     python3-gunicorn \
+    python3-pip \
+    sqlite \
+    $(python3 setupcfg2rpm.py setup.cfg) \
     && dnf clean all
 
-WORKDIR /tokman
-COPY run.sh run.sh
+RUN pip install --no-deps .
 
-CMD ["run.sh"]
+EXPOSE 8000
+VOLUME /secrets
+
+CMD ["./run.sh"]
