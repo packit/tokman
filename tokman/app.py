@@ -52,11 +52,15 @@ class Token(db.Model):
         )
 
 
+class AppNotInstalledError(Exception):
+    pass
+
+
 def get_token(namespace, repository):
     inst_id = github_integration.get_installation(namespace, repository).id
     inst_id = inst_id if isinstance(inst_id, int) or inst_id is None else inst_id.value
     if not inst_id:
-        raise RuntimeError(f"App is not installed on {namespace}/{repository}")
+        raise AppNotInstalledError(f"App is not installed on {namespace}/{repository}")
     inst_auth = github_integration.get_access_token(inst_id)
     # expires_at is UTC
     return inst_auth.token, inst_auth.expires_at
@@ -76,7 +80,10 @@ class AccessToken(Resource):
             db.session.add(token)
 
         if token.is_expired():
-            token.token, token.expires_at = get_token(namespace, repository)
+            try:
+                token.token, token.expires_at = get_token(namespace, repository)
+            except AppNotInstalledError as err:
+                return {"error": f"Failed to retrieve a token: {err}"}, 400
 
         db.session.commit()
 
