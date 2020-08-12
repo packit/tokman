@@ -1,6 +1,9 @@
 # Copyright Contributors to the Packit project.
 # SPDX-License-Identifier: MIT
 
+import logging
+import os
+
 from datetime import datetime
 from pathlib import Path
 from flask import Flask
@@ -22,6 +25,10 @@ token_renew_at = None
 def create_app():
     app = Flask(__name__)
     app.config.from_envvar("TOKMAN_CONFIG")
+
+    log_level = os.getenv("LOG_LEVEL", "info")
+    log_level = getattr(logging, log_level.upper())
+    logging.basicConfig(level=log_level)
 
     private_key = Path(app.config["GITHUB_APP_PRIVATE_KEY"]).read_text()
     app_id = int(app.config["GITHUB_APP_ID"])
@@ -78,14 +85,18 @@ class AccessToken(Resource):
         if token is None:
             token = Token(namespace=namespace, repository=repository)
             db.session.add(token)
+            api.logger.debug(f"Add {namespace}/{repository} to the DB")
 
         if token.is_expired():
             try:
                 token.token, token.expires_at = get_token(namespace, repository)
+                api.logger.debug(f"Get token for {namespace}/{repository}")
             except AppNotInstalledError as err:
+                api.logger.debug(f"Failed to get token for {namespace}/{repository}")
                 return {"error": f"Failed to retrieve a token: {err}"}, 400
 
         db.session.commit()
+        api.logger.debug("Commit to DB")
 
         return {
             "repository": repository,
