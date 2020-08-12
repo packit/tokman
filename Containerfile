@@ -5,7 +5,7 @@ FROM fedora:32
 
 WORKDIR /tokman
 ADD https://raw.githubusercontent.com/packit/deployment/master/scripts/setupcfg2rpm.py /tokman/setupcfg2rpm.py
-COPY . /tokman/
+COPY setup.cfg /tokman/
 
 RUN dnf install -y \
     git \
@@ -15,6 +15,7 @@ RUN dnf install -y \
     $(python3 setupcfg2rpm.py setup.cfg) \
     && dnf clean all
 
+COPY . /tokman/
 RUN pip install --no-deps .
 
 EXPOSE 8000

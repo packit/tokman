@@ -1,7 +1,6 @@
 # Copyright Contributors to the Packit project.
 # SPDX-License-Identifier: MIT
 
-import os
 from datetime import datetime
 from pathlib import Path
 from flask import Flask
@@ -21,15 +20,15 @@ github_integration = None
 
 def create_app():
     app = Flask(__name__)
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:////tmp/access_tokens.db"
-    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    app.config.from_envvar("TOKMAN_CONFIG")
 
-    private_key = Path(os.getenv("GITHUB_PRIVATE_KEY")).read_text()
-    app_id = int(os.getenv("GITHUB_APP_ID"))
-    api.init_app(app)
-    db.init_app(app)
+    private_key = Path(app.config["GITHUB_APP_PRIVATE_KEY"]).read_text()
+    app_id = int(app.config["GITHUB_APP_ID"])
     global github_integration
     github_integration = GithubIntegration(app_id, private_key)
+
+    api.init_app(app)
+    db.init_app(app)
 
     return app
 
@@ -84,4 +83,12 @@ class AccessToken(Resource):
             "access_token": token.token,
         }
 
-        return f"Hello {namespace}/{repository}"
+
+@api.route("/api/health")
+class Health(Resource):
+    def get(self):
+        """Is this up and running?"""
+        return {"message": "ok"}
+
+    def head(self):
+        pass
