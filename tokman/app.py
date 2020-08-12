@@ -6,7 +6,7 @@ import os
 
 from datetime import datetime
 from pathlib import Path
-from flask import Flask
+from flask import Flask, current_app
 from flask_sqlalchemy import SQLAlchemy
 from github import GithubIntegration
 
@@ -32,10 +32,7 @@ def create_app():
 
     private_key = Path(app.config["GITHUB_APP_PRIVATE_KEY"]).read_text()
     app_id = int(app.config["GITHUB_APP_ID"])
-    global github_integration
-    github_integration = GithubIntegration(app_id, private_key)
-    global token_renew_at
-    token_renew_at = int(app.config.get("TOKEN_RENEW_AT", 60))
+    app.github_integration = GithubIntegration(app_id, private_key)
 
     api.init_app(app)
     db.init_app(app)
@@ -51,6 +48,7 @@ class Token(db.Model):
     expires_at = db.Column(db.DateTime, nullable=True)
 
     def is_expired(self):
+        token_renew_at = int(current_app.config.get("TOKEN_RENEW_AT", 60))
         return (
             self.expires_at is None
             or self.token is None
@@ -63,11 +61,11 @@ class AppNotInstalledError(Exception):
 
 
 def get_token(namespace, repository):
-    inst_id = github_integration.get_installation(namespace, repository).id
+    inst_id = current_app.github_integration.get_installation(namespace, repository).id
     inst_id = inst_id if isinstance(inst_id, int) or inst_id is None else inst_id.value
     if not inst_id:
         raise AppNotInstalledError(f"App is not installed on {namespace}/{repository}")
-    inst_auth = github_integration.get_access_token(inst_id)
+    inst_auth = current_app.github_integration.get_access_token(inst_id)
     # expires_at is UTC
     return inst_auth.token, inst_auth.expires_at
 
