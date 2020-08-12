@@ -16,6 +16,7 @@ except ModuleNotFoundError:
 api = Api()
 db = SQLAlchemy()
 github_integration = None
+token_renew_at = None
 
 
 def create_app():
@@ -26,6 +27,8 @@ def create_app():
     app_id = int(app.config["GITHUB_APP_ID"])
     global github_integration
     github_integration = GithubIntegration(app_id, private_key)
+    global token_renew_at
+    token_renew_at = int(app.config.get("TOKEN_RENEW_AT", 60))
 
     api.init_app(app)
     db.init_app(app)
@@ -45,7 +48,7 @@ class Token(db.Model):
         return (
             self.expires_at is None
             or self.token is None
-            or (self.expires_at - datetime.utcnow()).seconds < 60
+            or (self.expires_at - datetime.utcnow()).seconds < token_renew_at
         )
 
 
