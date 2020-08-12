@@ -46,9 +46,8 @@ def create_app():
 class Token(db.Model):
     __tablename__ = "tokens"
     id = db.Column(db.Integer, primary_key=True)
-    namespace = db.Column(db.String(), unique=True, nullable=False)
-    repository = db.Column(db.String(), unique=True, nullable=False)
-    token = db.Column(db.String(), unique=True, nullable=True)
+    repo = db.Column(db.String, unique=True, nullable=False)
+    token = db.Column(db.String, nullable=True)
     expires_at = db.Column(db.DateTime, nullable=True)
 
     def is_expired(self):
@@ -79,24 +78,22 @@ def get_token(namespace, repository):
 class AccessToken(Resource):
     def get(self, namespace: str, repository: str):
         """Return an access token for <namespace>/<repository>"""
-        token = Token.query.filter_by(
-            namespace=namespace, repository=repository
-        ).first()
+        repo = f"{namespace}/{repository}"
+        token = Token.query.filter_by(repo=repo).first()
         if token is None:
-            token = Token(namespace=namespace, repository=repository)
+            api.logger.debug(f"Create {repo}")
+            token = Token(repo=repo)
             db.session.add(token)
-            api.logger.debug(f"Add {namespace}/{repository} to the DB")
 
         if token.is_expired():
             try:
+                api.logger.debug(f"Get token for {repo}")
                 token.token, token.expires_at = get_token(namespace, repository)
-                api.logger.debug(f"Get token for {namespace}/{repository}")
             except AppNotInstalledError as err:
-                api.logger.debug(f"Failed to get token for {namespace}/{repository}")
+                api.logger.debug(f"Failed to get token for {repo}")
                 return {"error": f"Failed to retrieve a token: {err}"}, 400
 
         db.session.commit()
-        api.logger.debug("Commit to DB")
 
         return {
             "repository": repository,

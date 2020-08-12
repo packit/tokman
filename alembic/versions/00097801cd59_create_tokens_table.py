@@ -20,9 +20,8 @@ def upgrade():
     op.create_table(
         "tokens",
         sa.Column("id", sa.Integer, primary_key=True),
-        sa.Column("namespace", sa.String, unique=True, nullable=False),
-        sa.Column("repository", sa.String, unique=True, nullable=False),
-        sa.Column("token", sa.String, unique=True, nullable=True),
+        sa.Column("repo", sa.String, unique=True, nullable=False),
+        sa.Column("token", sa.String, nullable=True),
         sa.Column("expires_at", sa.DateTime, nullable=True),
     )
 
