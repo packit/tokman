@@ -15,6 +15,8 @@ RUN dnf install -y \
     $(python3 setupcfg2rpm.py setup.cfg) \
     && dnf clean all
 
+RUN pip install --upgrade sentry-sdk[flask]
+
 COPY . /tokman/
 RUN pip install --no-deps .
 

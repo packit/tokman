@@ -23,6 +23,7 @@ token_renew_at = None
 
 
 def create_app():
+    configure_sentry()
     app = Flask(__name__)
     app.config.from_envvar("TOKMAN_CONFIG")
 
@@ -38,6 +39,27 @@ def create_app():
     db.init_app(app)
 
     return app
+
+
+def configure_sentry() -> None:
+    api.logger.debug("Setting up sentry for tokman.")
+
+    secret_key = os.getenv("SENTRY_SECRET")
+    if not secret_key:
+        return
+
+    # so that we don't have to have sentry sdk installed locally
+    import sentry_sdk
+    from sentry_sdk.integrations.flask import FlaskIntegration
+    from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
+
+    sentry_sdk.init(
+        secret_key,
+        integrations=[FlaskIntegration(), SqlalchemyIntegration()],
+        environment=os.getenv("DEPLOYMENT"),
+    )
+    with sentry_sdk.configure_scope() as scope:
+        scope.set_tag("runner-type", "tokman")
 
 
 class Token(db.Model):
