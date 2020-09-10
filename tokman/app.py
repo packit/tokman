@@ -4,7 +4,7 @@
 import logging
 import os
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from flask import Flask, current_app
 from flask_sqlalchemy import SQLAlchemy
@@ -70,11 +70,13 @@ class Token(db.Model):
     expires_at = db.Column(db.DateTime, nullable=True)
 
     def is_expired(self):
-        token_renew_at = int(current_app.config.get("TOKEN_RENEW_AT", 60))
+        token_renew_at = timedelta(
+            seconds=int(current_app.config.get("TOKEN_RENEW_AT", 60))
+        )
         return (
             self.expires_at is None
             or self.token is None
-            or (self.expires_at - datetime.utcnow()).seconds < token_renew_at
+            or (self.expires_at - datetime.utcnow()) < token_renew_at
         )
 
 
