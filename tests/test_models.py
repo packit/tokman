@@ -15,13 +15,29 @@ from tokman.app import Token
         (Token(expires_at=datetime.utcnow() + timedelta(minutes=10), token=None), True),
         (
             Token(
-                expires_at=datetime.utcnow() + timedelta(minutes=10), token="Token123",
+                expires_at=datetime.utcnow() + timedelta(minutes=10),
+                token="Token123",
             ),
             False,
         ),
         (
             Token(
-                expires_at=datetime.utcnow() + timedelta(seconds=10), token="Token123",
+                expires_at=datetime.utcnow() + timedelta(seconds=10),
+                token="Token123",
+            ),
+            True,
+        ),
+        (
+            Token(
+                expires_at=datetime.utcnow() - timedelta(seconds=10),
+                token="Token123",
+            ),
+            True,
+        ),
+        (
+            Token(
+                expires_at=datetime.utcnow() - timedelta(minutes=10),
+                token="Token123",
             ),
             True,
         ),
