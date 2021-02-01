@@ -14,7 +14,7 @@ repos:
       - id: prettier
         exclude: tests_requre/openshift_integration/test_data/*
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v3.3.0
+    rev: v3.4.0
     hooks:
       - id: check-added-large-files
       - id: check-ast
@@ -36,7 +36,7 @@ repos:
   #       args: [--no-strict-optional, --ignore-missing-imports]
   #       additional_dependencies: ["sqlalchemy-stubs"]
   - repo: https://github.com/packit/pre-commit-hooks
-    rev: 76dd54a98306a9f6ecf6672aa7687d6f07091c4e
+    rev: f395a03cbf341be573d6f843fdffa4c3590e7213
     hooks:
       - id: check-rebase
         args:
