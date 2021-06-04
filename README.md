@@ -56,8 +56,16 @@ GET <tokman_url>/api/<namespace>/<repository>
 
 `make build` builds the image.
 
-`make re-build` builds the image ignoring any cache and making sure the latest
-base image pulled.
+`make rebuild` builds the image ignoring any cache and making sure
+the latest base image is pulled.
+
+`make build-test-image` builds the image.
+
+`make rebuild-test-image` builds the image ignoring any cache and making sure
+the latest base image is pulled.
+
+`make check-in-container` runs tests in a container.
+`make check` runs the same tests locally.
 
 Before running the app locally, make sure you create `config.py` by making a
 copy of `config.py.example`. Update the value of `GITHUB_APP_ID` with the
