@@ -1,0 +1,13 @@
+# Copyright Contributors to the Packit project.
+# SPDX-License-Identifier: MIT
+
+FROM tokman
+
+WORKDIR /src
+
+RUN dnf install -y \
+    findutils \
+    make \
+    python3-flexmock \
+    python3-pytest \
+    && dnf clean all
