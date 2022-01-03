@@ -4,17 +4,17 @@
 
 repos:
   - repo: https://github.com/psf/black
-    rev: 21.11b1
+    rev: 21.12b0
     hooks:
       - id: black
         language_version: python3.6
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v2.5.0
+    rev: v2.5.1
     hooks:
       - id: prettier
         exclude: tests_requre/openshift_integration/test_data/*
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.0.1
+    rev: v4.1.0
     hooks:
       - id: check-added-large-files
       - id: check-ast
@@ -36,7 +36,7 @@ repos:
   #       args: [--no-strict-optional, --ignore-missing-imports]
   #       additional_dependencies: ["sqlalchemy-stubs"]
   - repo: https://github.com/packit/pre-commit-hooks
-    rev: df221508b08378e6dc54d4bdc74f62f76f8c686f
+    rev: b05e5e2196b725c98529c5c3861658ebcbf18783
     hooks:
       - id: check-rebase
         args:
