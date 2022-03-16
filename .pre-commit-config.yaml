@@ -40,5 +40,5 @@ repos:
     hooks:
       - id: check-rebase
         args:
-          - git://github.com/packit/tokman.git
+          - https://github.com/packit/tokman.git
         stages: [manual, push]
