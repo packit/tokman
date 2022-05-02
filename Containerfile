@@ -3,6 +3,9 @@
 
 FROM fedora:35
 
+# Dependency of setupcfg2rpm
+RUN dnf install -y python3-packaging && dnf clean all
+
 WORKDIR /tokman
 ADD https://raw.githubusercontent.com/packit/deployment/master/scripts/setupcfg2rpm.py /tokman/setupcfg2rpm.py
 COPY setup.cfg /tokman/
