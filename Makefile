@@ -1,7 +1,7 @@
 # Copyright Contributors to the Packit project.
 # SPDX-License-Identifier: MIT
 
-.PHONY: build-image rebuild-image build-test-image rebuild-test-image
+.PHONY: build-image rebuild build-test-image rebuild-test-image
 
 IMAGE_NAME ?= tokman
 TEST_IMAGE ?= tokman-test
@@ -20,7 +20,15 @@ rebuild:
 	$(CONTAINER_ENGINE) build --no-cache --pull=true -f Containerfile -t $(IMAGE_NAME) .
 
 run:
-	$(CONTAINER_ENGINE) run -it --rm -v $(CURDIR):/config:z -v $(SECRETS_DIR):/secrets:z --env TOKMAN_CONFIG=/config/config.py --env WORKERS=$(WORKERS) --env LOG_LEVEL=$(LOG_LEVEL) --publish 8000 $(IMAGE_NAME)
+	$(CONTAINER_ENGINE) run -it --rm \
+		-v $(CURDIR):/config:z \
+		-v $(SECRETS_DIR):/secrets:z \
+		-v $(CURDIR):/access_tokens:z \
+		--env TOKMAN_CONFIG=/config/config.py \
+		--env WORKERS=$(WORKERS) \
+		--env LOG_LEVEL=$(LOG_LEVEL) \
+		--network=host \
+		$(IMAGE_NAME)
 
 build-test-image: build
 	$(CONTAINER_ENGINE) build -f Containerfile.tests -t $(TEST_IMAGE) .
