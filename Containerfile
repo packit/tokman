@@ -1,7 +1,7 @@
 # Copyright Contributors to the Packit project.
 # SPDX-License-Identifier: MIT
 
-FROM fedora:35
+FROM registry.fedoraproject.org/fedora:37
 
 # Dependency of setupcfg2rpm
 RUN dnf install -y python3-packaging && dnf clean all
