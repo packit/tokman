@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from flask import Flask, current_app
 from flask_sqlalchemy import SQLAlchemy
-from github import GithubIntegration
+from github import GithubIntegration, GithubException
 
 try:
     from flask_restx import Api, Resource
@@ -114,6 +114,11 @@ class AccessToken(Resource):
             except AppNotInstalledError as err:
                 api.logger.debug(f"Failed to get token for {repo}")
                 return {"error": f"Failed to retrieve a token: {err}"}, 400
+            except GithubException as err:
+                api.logger.debug(f"Failed to get token for {repo}")
+                return {
+                    "error": f"GithubException: {err.status} {err.data['message']}"
+                }, 400
 
         db.session.commit()
 
