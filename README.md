@@ -84,9 +84,20 @@ The logging level used can be configured by setting `LOG_LEVEL` to "info",
 For development purposes you can also use `flask run` to run the application.
 Before doing so:
 
+- Set up `config.py` and `private-key.pem` as described above.
 - Create and activate a Python virtual environment (with `mkvirtualenv tokman`, for example).
 - Install the app and the dependencies in the environment: `pip install -e .`
-- Configure flask for development mode: `export FLASK_ENV=development`.
+- Set up the database:
+
+```
+$ DB_URI=sqlite:////tmp/access_tokens.db alembic upgrade head
+```
+
+- Run flask with a command similar to this:
+
+```
+$ TOKMAN_CONFIG=$PWD/config.py flask --app tokman run --debug
+```
 
 [link]: https://docs.github.com/en/developers/apps/authenticating-with-github-apps#authenticating-as-a-github-app
 [installation tokens]: https://docs.github.com/en/rest/reference/apps#create-an-installation-access-token-for-an-app
