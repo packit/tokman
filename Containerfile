@@ -10,7 +10,7 @@ WORKDIR /tokman
 ADD https://raw.githubusercontent.com/packit/deployment/master/scripts/setupcfg2rpm.py /tokman/setupcfg2rpm.py
 COPY setup.cfg /tokman/
 
-RUN dnf install -y \
+RUN dnf install -y --setopt=install_weak_deps=False \
     git \
     python3-gunicorn \
     python3-pip \
