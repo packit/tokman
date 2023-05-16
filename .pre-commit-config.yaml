@@ -39,7 +39,7 @@ repos:
   #       args: [--no-strict-optional, --ignore-missing-imports]
   #       additional_dependencies: ["sqlalchemy-stubs"]
   - repo: https://github.com/packit/pre-commit-hooks
-    rev: v1.1.0
+    rev: v1.2.0
     hooks:
       - id: check-rebase
         args:
