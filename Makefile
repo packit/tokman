@@ -1,7 +1,7 @@
 # Copyright Contributors to the Packit project.
 # SPDX-License-Identifier: MIT
 
-.PHONY: build-image rebuild build-test-image rebuild-test-image
+.PHONY: build rebuild run build-test-image rebuild-test-image check check-in-container
 
 IMAGE_NAME ?= tokman
 TEST_IMAGE ?= tokman-test

@@ -8,6 +8,9 @@ WORKDIR /src
 RUN dnf install -y \
     findutils \
     make \
-    python3-flexmock \
     python3-pytest \
     && dnf clean all
+
+# https://bugzilla.redhat.com/show_bug.cgi?id=2120251
+RUN pip install flexmock \
+    && pip check
