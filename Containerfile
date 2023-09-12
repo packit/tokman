@@ -11,7 +11,7 @@ WORKDIR /tokman
 RUN dnf install -y --setopt=install_weak_deps=False \
     python3-flask-restx python3-pygithub python3-cryptography \
     git python3-gunicorn python3-alembic sqlite \
-    python3-blinker python3-certifi \
+    python3-blinker \
     && dnf clean all
 
 COPY . /tokman/
