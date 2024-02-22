@@ -1,3 +1,6 @@
+# Copyright Contributors to the Packit project.
+# SPDX-License-Identifier: MIT
+
 """create tokens table
 
 Revision ID: 00097801cd59

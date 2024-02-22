@@ -1,3 +1,6 @@
+# Copyright Contributors to the Packit project.
+# SPDX-License-Identifier: MIT
+
 from tests.spellbook import PRIVATE_KEY, TESTING_DB
 
 SQLALCHEMY_DATABASE_URI = TESTING_DB
